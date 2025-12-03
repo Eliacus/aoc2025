@@ -1,6 +1,6 @@
 fn main() {
     let input = include_str!("../../inputs/day2.txt");
-    let ranges: Vec<&str> = input.split(',').collect();
+    let ranges = input.split(',');
     let mut sum_part1 = 0;
     let mut sum_part2 = 0;
     for range in ranges {
