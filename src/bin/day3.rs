@@ -23,20 +23,15 @@ fn part1(numbers: &[char]) -> i32 {
 }
 
 fn part2(numbers: &[char]) -> u64 {
-    let mut target_idxs: Vec<usize> = Vec::with_capacity(12);
-    for target_idx in 0..12 {
-        let start;
-        if target_idx == 0 {
-            start = 0;
-        } else {
-            start = target_idxs[target_idx - 1] + 1;
-        }
-        let end = numbers.len() - 12 + target_idx + 1;
-        // println!("start: {start}, end: {end}");
-        let idx = find_max_num(numbers, start, end);
-        target_idxs.push(idx);
-        // println!("{target_idxs:?}");
-    }
+    let target_idxs: Vec<usize> = (0..12)
+        .scan(0, |start, target_idx| {
+            let end = numbers.len() - 12 + target_idx + 1;
+            let idx = find_max_num(numbers, *start, end);
+            *start = idx + 1;
+            Some(idx)
+        })
+        .collect();
+
     let joltage_str: String = target_idxs
         .iter()
         .copied()
@@ -45,8 +40,8 @@ fn part2(numbers: &[char]) -> u64 {
 
     joltage_str.trim().parse::<u64>().unwrap()
 }
-
 /// Finds the maximum number and it's corresponding index between start and end
+/// Used both in part 1 and 2!
 fn find_max_num(numbers: &[char], start: usize, end: usize) -> usize {
     let mut max_number = 0;
     let mut max_idx: usize = 0;
